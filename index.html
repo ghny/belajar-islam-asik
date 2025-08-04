@@ -1,113 +1,113 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Kuis Rukun Iman</title>
   <style>
     body {
-      font-family: sans-serif;
-      padding: 20px;
-      background-color: #f0f8ff;
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+      padding: 40px;
+      text-align: center;
     }
     .quiz-container {
+      background: white;
       max-width: 600px;
       margin: auto;
-      background: white;
       padding: 20px;
       border-radius: 12px;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
-    .question {
-      font-size: 1.2rem;
-      margin-bottom: 10px;
-    }
-    .option {
-      margin: 8px 0;
-    }
     button {
-      margin-top: 20px;
+      margin: 10px;
       padding: 10px 20px;
-      font-size: 1rem;
-      background-color: #05baa9;
-      color: white;
-      border: none;
+      font-size: 16px;
       border-radius: 8px;
+      border: none;
       cursor: pointer;
     }
-    .result {
-      margin-top: 20px;
-      font-weight: bold;
-      font-size: 1.1rem;
+    button:hover {
+      background-color: #e0f7fa;
+    }
+    .hidden {
+      display: none;
     }
   </style>
 </head>
 <body>
   <div class="quiz-container">
-    <h2>Kuis Rukun Iman</h2>
-    <div id="quiz"></div>
-    <button onclick="submitQuiz()">Selesai</button>
-    <div class="result" id="result"></div>
+    <h2 id="question">Memuat soal...</h2>
+    <div id="buttons"></div>
+    <p id="feedback"></p>
+    <button id="next" class="hidden">Next</button>
   </div>
 
   <script>
     const questions = [
       {
-        question: "Iman kepada Allah termasuk rukun iman ke?",
-        options: ["Pertama", "Kedua", "Ketiga", "Keenam"],
-        answer: "Pertama"
+        question: "Apakah Rukun Iman ada 6?",
+        options: ["Benar", "Salah"],
+        correct: "Benar",
+        explanation: "Betul! Rukun Iman terdiri dari 6 yaitu iman kepada Allah, malaikat, kitab‑kitab, rasul, hari kiamat, dan qadar."
       },
       {
-        question: "Beriman kepada malaikat artinya meyakini adanya ...",
-        options: ["Nabi", "Kitab", "Malaikat", "Qadha dan Qadar"],
-        answer: "Malaikat"
+        question: "Salah satu Rukun Iman adalah iman kepada makhluk ciptaan Allah.",
+        options: ["Benar", "Salah"],
+        correct: "Salah",
+        explanation: "Salah. Rukun Iman mengacu pada iman kepada Allah, bukan kepada makhluk-Nya."
       },
       {
-        question: "Rukun iman yang keenam adalah ...",
-        options: ["Iman kepada Allah", "Iman kepada Qadha dan Qadar", "Iman kepada Rasul", "Iman kepada Kitab"],
-        answer: "Iman kepada Qadha dan Qadar"
+        question: "Iman kepada malaikat termasuk bagian dari Rukun Iman.",
+        options: ["Benar", "Salah"],
+        correct: "Benar",
+        explanation: "Ya. Iman kepada malaikat merupakan bagian dari Rukun Iman."
       }
     ];
 
-    let quizDiv = document.getElementById("quiz");
+    let current = 0;
 
-    questions.forEach((q, i) => {
-      let qDiv = document.createElement("div");
-      qDiv.classList.add("question-block");
+    const questionEl = document.getElementById("question");
+    const buttonsEl = document.getElementById("buttons");
+    const feedbackEl = document.getElementById("feedback");
+    const nextBtn = document.getElementById("next");
 
-      let qText = document.createElement("div");
-      qText.classList.add("question");
-      qText.innerText = q.question;
-      qDiv.appendChild(qText);
+    function showQuestion() {
+      const q = questions[current];
+      questionEl.textContent = q.question;
+      feedbackEl.textContent = "";
+      nextBtn.classList.add("hidden");
+      buttonsEl.innerHTML = "";
 
       q.options.forEach(opt => {
-        let optLabel = document.createElement("label");
-        optLabel.classList.add("option");
-
-        let optInput = document.createElement("input");
-        optInput.type = "radio";
-        optInput.name = `q${i}`;
-        optInput.value = opt;
-
-        optLabel.appendChild(optInput);
-        optLabel.appendChild(document.createTextNode(" " + opt));
-        qDiv.appendChild(optLabel);
-        qDiv.appendChild(document.createElement("br"));
+        const btn = document.createElement("button");
+        btn.textContent = opt;
+        btn.onclick = () => handleAnswer(opt);
+        buttonsEl.appendChild(btn);
       });
-
-      quizDiv.appendChild(qDiv);
-    });
-
-    function submitQuiz() {
-      let score = 0;
-      questions.forEach((q, i) => {
-        let selected = document.querySelector(`input[name="q${i}"]:checked`);
-        if (selected && selected.value === q.answer) {
-          score++;
-        }
-      });
-      document.getElementById("result").innerText = `Skor kamu: ${score} dari ${questions.length}`;
     }
+
+    function handleAnswer(selected) {
+      const q = questions[current];
+      const isCorrect = selected === q.correct;
+      feedbackEl.innerHTML = isCorrect ? "✅ Jawaban benar!<br>" + q.explanation : "❌ Belum tepat.<br>" + q.explanation;
+      nextBtn.classList.remove("hidden");
+    }
+
+    nextBtn.onclick = () => {
+      current++;
+      if (current < questions.length) {
+        showQuestion();
+      } else {
+        questionEl.textContent = "🎉 Kuis selesai!";
+        buttonsEl.innerHTML = "";
+        feedbackEl.innerHTML = "Terima kasih sudah belajar bersama!";
+        nextBtn.classList.add("hidden");
+      }
+    };
+
+    showQuestion();
   </script>
 </body>
 </html>
+
