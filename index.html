@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kuis Rukun Iman</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+      background-color: #f0f8ff;
+    }
+    .quiz-container {
+      max-width: 600px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .question {
+      font-size: 1.2rem;
+      margin-bottom: 10px;
+    }
+    .option {
+      margin: 8px 0;
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 1rem;
+      background-color: #05baa9;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .result {
+      margin-top: 20px;
+      font-weight: bold;
+      font-size: 1.1rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="quiz-container">
+    <h2>Kuis Rukun Iman</h2>
+    <div id="quiz"></div>
+    <button onclick="submitQuiz()">Selesai</button>
+    <div class="result" id="result"></div>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        question: "Iman kepada Allah termasuk rukun iman ke?",
+        options: ["Pertama", "Kedua", "Ketiga", "Keenam"],
+        answer: "Pertama"
+      },
+      {
+        question: "Beriman kepada malaikat artinya meyakini adanya ...",
+        options: ["Nabi", "Kitab", "Malaikat", "Qadha dan Qadar"],
+        answer: "Malaikat"
+      },
+      {
+        question: "Rukun iman yang keenam adalah ...",
+        options: ["Iman kepada Allah", "Iman kepada Qadha dan Qadar", "Iman kepada Rasul", "Iman kepada Kitab"],
+        answer: "Iman kepada Qadha dan Qadar"
+      }
+    ];
+
+    let quizDiv = document.getElementById("quiz");
+
+    questions.forEach((q, i) => {
+      let qDiv = document.createElement("div");
+      qDiv.classList.add("question-block");
+
+      let qText = document.createElement("div");
+      qText.classList.add("question");
+      qText.innerText = q.question;
+      qDiv.appendChild(qText);
+
+      q.options.forEach(opt => {
+        let optLabel = document.createElement("label");
+        optLabel.classList.add("option");
+
+        let optInput = document.createElement("input");
+        optInput.type = "radio";
+        optInput.name = `q${i}`;
+        optInput.value = opt;
+
+        optLabel.appendChild(optInput);
+        optLabel.appendChild(document.createTextNode(" " + opt));
+        qDiv.appendChild(optLabel);
+        qDiv.appendChild(document.createElement("br"));
+      });
+
+      quizDiv.appendChild(qDiv);
+    });
+
+    function submitQuiz() {
+      let score = 0;
+      questions.forEach((q, i) => {
+        let selected = document.querySelector(`input[name="q${i}"]:checked`);
+        if (selected && selected.value === q.answer) {
+          score++;
+        }
+      });
+      document.getElementById("result").innerText = `Skor kamu: ${score} dari ${questions.length}`;
+    }
+  </script>
+</body>
+</html>
